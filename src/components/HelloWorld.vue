@@ -1,34 +1,30 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-   // https://www.vuemastery.com/courses/real-world-vue-js/vue-cli
-   // https://cli.vuejs.org/guide/creating-a-project.html#using-the-gui
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>111Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    <!-- Control buttons -->
+    <div id="myBtnContainer">
+      <button class="btn active" onclick="filterSelection('all')"> Show all</button>
+      <button class="btn" onclick="filterSelection('cars')"> Cars</button>
+      <button class="btn" onclick="filterSelection('animals')"> Animals</button>
+      <button class="btn" onclick="filterSelection('fruits')"> Fruits</button>
+      <button class="btn" onclick="filterSelection('colors')"> Colors</button>
+    </div>
+
+    <!-- The filterable elements. Note that some have multiple class names (this can be used if they belong to multiple categories) -->
+    <div class="container">
+      <div class="filterDiv cars">BMW</div>
+      <div class="filterDiv colors fruits">Orange</div>
+      <div class="filterDiv cars">Volvo</div>
+      <div class="filterDiv colors">Red</div>
+      <div class="filterDiv cars animals">Mustang</div>
+      <div class="filterDiv colors">Blue</div>
+      <div class="filterDiv animals">Cat</div>
+      <div class="filterDiv animals">Dog</div>
+      <div class="filterDiv fruits">Melon</div>
+      <div class="filterDiv fruits animals">Kiwi</div>
+      <div class="filterDiv fruits">Banana</div>
+      <div class="filterDiv fruits">Lemon</div>
+      <div class="filterDiv animals">Cow</div>
+    </div>
   </div>
 </template>
 
@@ -39,6 +35,54 @@ export default {
     msg: String
   }
 }
+
+filterSelection("all");
+function filterSelection(c) {
+  var x, i;
+  x = document.getElementsByClassName("filterDiv");
+  if (c == "all") c = "";
+  // Add the "show" class (display:block) to the filtered elements, and remove the "show" class from the elements that are not selected
+  for (i = 0; i < x.length; i++) {
+    w3RemoveClass(x[i], "show");
+    if (x[i].className.indexOf(c) > -1) w3AddClass(x[i], "show");
+  }
+}
+
+// Show filtered elements
+function w3AddClass(element, name) {
+  var i, arr1, arr2;
+  arr1 = element.className.split(" ");
+  arr2 = name.split(" ");
+  for (i = 0; i < arr2.length; i++) {
+    if (arr1.indexOf(arr2[i]) == -1) {
+      element.className += " " + arr2[i];
+    }
+  }
+}
+
+// Hide elements that are not selected
+function w3RemoveClass(element, name) {
+  var i, arr1, arr2;
+  arr1 = element.className.split(" ");
+  arr2 = name.split(" ");
+  for (i = 0; i < arr2.length; i++) {
+    while (arr1.indexOf(arr2[i]) > -1) {
+      arr1.splice(arr1.indexOf(arr2[i]), 1);
+    }
+  }
+  element.className = arr1.join(" ");
+}
+
+// // Add active class to the current control button (highlight it)
+// var btnContainer = document.getElementById("myBtnContainer");
+// var btns = btnContainer.getElementsById("btn");
+// for (var i = 0; i < btns.length; i++) {
+//   btns[i].addEventListener("click", function() {
+//     var current = document.getElementsByClassName("active");
+//     current[0].className = current[0].className.replace(" active", "");
+//     this.className += " active";
+//   });
+// }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -56,5 +100,45 @@ li {
 }
 a {
   color: #42b983;
+}
+
+.container {
+  overflow: hidden;
+}
+
+.filterDiv {
+  float: left;
+  background-color: #2196F3;
+  color: #ffffff;
+  width: 100px;
+  line-height: 100px;
+  text-align: center;
+  margin: 2px;
+  display: none; /* Hidden by default */
+}
+
+/* The "show" class is added to the filtered elements */
+.show {
+  display: block;
+}
+
+/* Style the buttons */
+.btn {
+  border: none;
+  outline: none;
+  padding: 12px 16px;
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+/* Add a light grey background on mouse-over */
+.btn:hover {
+  background-color: #ddd;
+}
+
+/* Add a dark background to the active button */
+.btn.active {
+  background-color: #666;
+  color: white;
 }
 </style>
